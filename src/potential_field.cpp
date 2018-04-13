@@ -41,8 +41,9 @@ Eigen::Vector3d FieldGen::getAcc(const Eigen::Vector3d& refPos, const bool& inve
     else
       acc =  this->strength*(1/rho - 1/this->radius)*1/rho/rho*(refPos-pos)/((refPos-pos).norm());
   }
-  std::cout<<"\n\n"<<"Difference of "<<rho<<" for attractor="<<attractor<<"yields accel of "<<acc<<std::endl;
+  //std::cout<<"\n\n"<<"Difference of "<<rho<<" for attractor="<<attractor<<"yields accel of "<<acc<<std::endl;
   //std::cout<<"\n\n"<<this->name<<": "<<pos<<"\n"<<"Strength: "<<strength<<"\tRadius: "<<radius<<"\t Attractor: "<<attractor<<"\t Rho"<<rho<<"\nRefPos: "<<refPos<<std::endl;
+  return acc;
 }
 
 PotentialField::PotentialField(){
@@ -59,13 +60,13 @@ bool PotentialField::contains(const std::string& name){
 }
 void PotentialField::add(const FieldGen& fg){
   this->fieldGens.insert(fg);
-  std::cout<<"Added "<<fg.name<<std::endl;
+  //std::cout<<"Added "<<fg.name<<std::endl;
 }
 void PotentialField::updatePos(const std::string& name, const Eigen::Vector3d& pos){
   FieldGen named(name);
   std::set<FieldGen>::iterator it = this->fieldGens.find(named);
   it->pos << pos;
-  std::cout<<"Updated "<<name<<std::endl;
+  //std::cout<<"Updated "<<name<<std::endl;
 }
 void PotentialField::updateStrength(const std::string& name,const double& strength){
   FieldGen named(name);
@@ -84,10 +85,12 @@ Eigen::Vector3d PotentialField::getAcc(const Eigen::Vector3d& pos, const std::st
   
   std::set<FieldGen>::iterator it;
   for(it = this->fieldGens.begin(); it!=this->fieldGens.end();it++){
-    if(name.compare(it->name)<0)
+    if(name.compare(it->name)!=0){
       acc += it->getAcc(pos,invert);
-    std::cout<<it->name<<": "<<it->getAcc(pos,invert)<<std::endl;
+      //std::cout<<it->name<<" and "<<name<<": "<<it->getAcc(pos,invert)<<std::endl;
+    }
   }
+  return acc;
 }
 
 

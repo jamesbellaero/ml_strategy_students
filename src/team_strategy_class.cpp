@@ -86,7 +86,7 @@ void TeamStrategy::AddQuad(const std::string &quad_name,
 		new_quad.pub_reference = new_quad.nh.advertise<mg_msgs::PVA>(output_topic, 1);
 		quads_.insert(new_quad);
 		n_quads_ = n_quads_ + 1;
-		FieldGen fg(quad_name,true,ref_pos,this->allyStr,this->quadRad);
+		FieldGen fg(quad_name,false,ref_pos,this->allyStr,this->quadRad);
 		field.add(fg);
 	}
 }
