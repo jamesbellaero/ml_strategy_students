@@ -423,7 +423,7 @@ void TeamStrategy::OffensiveBalloon(const std::set<QuadData>::iterator &it,
 void TeamStrategy::OffensivePotential(const std::set<QuadData>::iterator &it,
 	                                  const double &dt) {
 	Eigen::Vector3d pos = it->quad_state.position;
-	Eigen::Vector3d acc = this->field.getAcc(pos,false);
+	Eigen::Vector3d acc = this->field.getAcc(pos,it->name,false);
 
 	it->reference_integrator.SetPos(pos);
 	it->reference_integrator.UpdateStates(acc, dt);
@@ -490,7 +490,7 @@ void TeamStrategy::DefensiveTargeting(const std::set<QuadData>::iterator &it,
 void TeamStrategy::DefensivePotential(const std::set<QuadData>::iterator &it,
 	                               			const double &dt){
 	Eigen::Vector3d pos = it->quad_state.position;
-	Eigen::Vector3d acc = this->field.getAcc(pos,false);
+	Eigen::Vector3d acc = this->field.getAcc(pos,it->name,false);
 
 	it->reference_integrator.SetPos(pos);
 	it->reference_integrator.UpdateStates(acc, dt);

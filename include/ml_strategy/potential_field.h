@@ -15,7 +15,7 @@ public:
   mutable double strength, radius;
   FieldGen();
   FieldGen(const std::string &name);
-  FieldGen(const std::string &name,const bool& attactor, Eigen::Vector3d &pos,const double& strength, double& radius);
+  FieldGen(const std::string &name,const bool& attactor, const Eigen::Vector3d &pos,const double& strength, const double& radius);
   Eigen::Vector3d getAcc(const Eigen::Vector3d &refPos,const bool& invert) const;
   bool operator<(const FieldGen& other) const {
     int compareResult = name.compare(other.name);
@@ -34,7 +34,7 @@ public:
   void updatePos(const std::string& name, const Eigen::Vector3d& pos);
   void updateStrength(const std::string &name, const double& strength);
   void updateRadius(const std::string &name, const double& radius);
-  Eigen::Vector3d getAcc(const Eigen::Vector3d& pos, const bool& invert);
+  Eigen::Vector3d getAcc(const Eigen::Vector3d& pos, const std::string& name, const bool& invert);
 };
 
 
