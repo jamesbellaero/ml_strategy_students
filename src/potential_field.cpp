@@ -18,7 +18,7 @@ FieldGen::FieldGen(std::string name, bool attractor, Eigen::Vector3d pos, double
   this->radius = radius;
 }
 
-FieldGen::getAcc(Eigen::Vector3d refPos, bool invert){
+Eigen::Vector3d FieldGen::getAcc(Eigen::Vector3d refPos, bool invert){
   Eigen::Vector3d acc;
   double rho = (pos - refPos).norm(); //Euclidean distance between the two points
 
@@ -38,10 +38,10 @@ FieldGen::getAcc(Eigen::Vector3d refPos, bool invert){
 
 PotentialField::PotentialField(){
 }
-PotentialField::PotentialField(std::vector<FieldGen> fieldGens){
+PotentialField::PotentialField(std::set<FieldGen> fieldGens){
   this->fieldGens = fieldGens;
 }
-bool PotentialField::contains(std:string name){
+bool PotentialField::contains(std::string name){
   std::set<FieldGen>::iterator it;
   it = this->fieldGens.find(name);
   return it != this->fieldGens.end();
