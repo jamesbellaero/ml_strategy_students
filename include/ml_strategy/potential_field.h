@@ -14,7 +14,7 @@ public:
   FieldGen();
   FieldGen(std::string name, bool attactor, Eigen::Vector3d pos, double strength, double radius);
   Eigen::Vector3d getAcc(Eigen::Vector3d refPos, bool invert);
-  bool operator<(const QuadData& other) const {
+  bool operator<(const FieldGen& other) const {
     int compareResult = name.compare(other.name);
     return (compareResult < 0);
   }
