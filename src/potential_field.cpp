@@ -10,14 +10,14 @@ FieldGen::FieldGen(){
   this->radius = 1;
 }
 
-FieldGen::FieldGen(std::string name){
+FieldGen::FieldGen(const std::string& name){
   this->name = name;
   this->pos << 0,0,0;
   this->strength = 0;
   this->radius = 1;
 }
 
-FieldGen::FieldGen(std::string name, bool attractor, Eigen::Vector3d pos, double strength, double radius){
+FieldGen::FieldGen(const std::string &name, const bool& attractor, const Eigen::Vector3d& pos, const double& strength, const double& radius){
   this->name = name;
   this->attractor = attractor;
   this->pos = pos;
@@ -25,7 +25,7 @@ FieldGen::FieldGen(std::string name, bool attractor, Eigen::Vector3d pos, double
   this->radius = radius;
 }
 
-Eigen::Vector3d FieldGen::getAcc(Eigen::Vector3d refPos, bool invert) const{
+Eigen::Vector3d FieldGen::getAcc(const Eigen::Vector3d& refPos, const bool& invert) const{
   Eigen::Vector3d acc;
   double rho = (pos - refPos).norm(); //Euclidean distance between the two points
   
@@ -45,37 +45,37 @@ Eigen::Vector3d FieldGen::getAcc(Eigen::Vector3d refPos, bool invert) const{
 
 PotentialField::PotentialField(){
 }
-PotentialField::PotentialField(std::set<FieldGen> fieldGens){
+PotentialField::PotentialField(const std::set<FieldGen>& fieldGens){
   this->fieldGens = fieldGens;
 }
-bool PotentialField::contains(std::string name){
+bool PotentialField::contains(const std::string& name){
   FieldGen named(name);
 
   std::set<FieldGen>::iterator it;
   it = this->fieldGens.find(named);
   return it != this->fieldGens.end();
 }
-void PotentialField::add(FieldGen& fg){
+void PotentialField::add(const FieldGen& fg){
   this->fieldGens.insert(fg);
   std::cout<<"Added "<<fg.name<<std::endl;
 }
-void PotentialField::updatePos(std::string name, Eigen::Vector3d pos){
+void PotentialField::updatePos(const std::string& name, const Eigen::Vector3d& pos){
   FieldGen named(name);
   std::set<FieldGen>::iterator it = this->fieldGens.find(named);
   it->pos = pos;
 }
-void PotentialField::updateStrength(std::string name, double strength){
+void PotentialField::updateStrength(const std::string& name,const double& strength){
   FieldGen named(name);
   std::set<FieldGen>::iterator it = this->fieldGens.find(named);
   it->strength = strength;
 }
-void PotentialField::updateRadius(std::string name, double radius){
+void PotentialField::updateRadius(const std::string& name, const double& radius){
   FieldGen named(name);
   std::set<FieldGen>::iterator it = this->fieldGens.find(named);
   it->radius = radius;
 }
 
-Eigen::Vector3d PotentialField::getAcc(Eigen::Vector3d pos, bool invert){
+Eigen::Vector3d PotentialField::getAcc(const Eigen::Vector3d& pos, const bool& invert){
   Eigen::Vector3d acc;
   acc << 0,0,0;
   
