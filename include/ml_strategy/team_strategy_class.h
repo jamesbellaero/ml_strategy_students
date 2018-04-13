@@ -9,6 +9,7 @@
 #include "ml_strategy/rk4.h"
 #include "nav_msgs/Odometry.h"
 #include "mg_msgs/PVA.h"
+#include "potential_field.h"
 
 // Offensive states
 class AttackStates{
@@ -107,6 +108,9 @@ class TeamStrategy {
     Plane3d enemy_balloon_plane_;  // Used to find distance to balloon plane
     bool balloon_targeted_ = false;
     bool balloon_popped_ = false;
+    double enemyStr, allyStr, balloonStr, quadRad, balloonRad;
+    PotentialField field;
+
 
  	// Constructors
  	TeamStrategy();
@@ -156,12 +160,16 @@ class TeamStrategy {
 	                      const double &dt);
     void OffensiveBalloon(const std::set<QuadData>::iterator &it,
 	                      const double &dt);
+    void OffensivePotential(const std::set<QuadData>::iterator &it,
+                            const double &dt);
     void DefensiveSteady(const std::set<QuadData>::iterator &it,
 	                     const double &dt);
     void DefensiveTargeting(const std::set<QuadData>::iterator &it,
 	                        const double &dt);
 	void DefensiveReturn(const std::set<QuadData>::iterator &it,
 	                     const double &dt);
+    void DefensivePotential(const std::set<QuadData>::iterator &it,
+                            const double &dt);
 
 };
 

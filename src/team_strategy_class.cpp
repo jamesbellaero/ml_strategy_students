@@ -18,6 +18,14 @@ TeamStrategy::TeamStrategy(const double max_vel,
 	enemy_balloon_plane_ = Plane3d(enemy_balloon_, defensive_direction_);
 	n_quads_ = 0;
 	n_enemies_ = 0;
+	enemyStr = 5;
+	allyStr = 5;
+	balloonStr = 20;
+	quadRad = 3;
+	balloonRad = 20;
+	PotentialField field();
+	field.add(new FieldGen("Enemy_Balloon",true,enemy_balloon,balloonStr,balloonRad));
+	field.add(new FieldGen("Team_Balloon",false,team_balloon,balloonStr,balloonRad));
 }
 
 // Methods
@@ -71,6 +79,7 @@ void TeamStrategy::AddQuad(const std::string &quad_name,
 		new_quad.pub_reference = new_quad.nh.advertise<mg_msgs::PVA>(output_topic, 1);
 		quads_.insert(new_quad);
 		n_quads_ = n_quads_ + 1;
+		field.add(new FieldGen(name,true,ref_pos,this.allyStr,this.quadRad));
 	}
 }
 
@@ -103,6 +112,7 @@ void TeamStrategy::UpdateQuadOdom(const std::string &name,
 	this->FindQuadIndex(name, &it1);
 	if (it1 != quads_.end()) {  // The quad is in the team
 		this->Odom2QuatStates(odom, &it1->quad_state);
+		field.updatePos(name,it1->quad_state.position);
 	} else {  // If not in the team, must be an enemy
 		std::set<EnemyData>::iterator it2;
 		this->FindEnemyIndex(name, &it2);
@@ -110,6 +120,13 @@ void TeamStrategy::UpdateQuadOdom(const std::string &name,
 			this->Odom2QuatStates(odom, &it2->quad_state);
 		} else {  // Create new enemy
 			this->AddEnemy(name, odom);
+		}
+		if(!field.contains(name)){
+			FieldGen fg(name,false,it2->quad_state.position,this.enemyStr,this.quadRad);
+			field.add(fg);
+		}
+		else{
+			field.updatePos(name,it2->quad_state.position);
 		}
 	}
 }
@@ -298,9 +315,9 @@ void TeamStrategy::UpdateReferences(const double &dt) {
 			if(it->role.AttackState.State == it->role.AttackState.RETURNING) {
 				this->OffensiveReturn(it, dt);
 			} else if(it->role.AttackState.State == it->role.AttackState.ADVANCING) {
-				this->OffensiveAdvance(it, dt);
+				this->OffensivePotential(it, dt);
 			} else if(it->role.AttackState.State == it->role.AttackState.BALLOON) {
-				this->OffensiveBalloon(it, dt);
+				this->OffensivePotential(it, dt);
 			}
 		}
 	}
@@ -395,6 +412,18 @@ void TeamStrategy::OffensiveBalloon(const std::set<QuadData>::iterator &it,
 	it->reference = this->GetRefRk4(it, dt);
 }
 
+void TeamStrategy::OffensivePotential(const std::set<QuadData>::iterator &it,
+	                                  const double &dt) {
+	Eigen::Vector3d pos = it->quad_state.position;
+	Eigen::Vector3d acc = this.field.getAcc(pos,false);
+
+	it->reference_integrator.SetPos(pos);
+	it->reference_integrator.UpdateStates(acc, dt);
+
+	it->reference = this->GetRefRk4(it,dt);
+
+}
+
 void TeamStrategy::DefensiveSteady(const std::set<QuadData>::iterator &it,
 	                               const double &dt) {
 	// Set reference to initial position
@@ -448,6 +477,17 @@ void TeamStrategy::DefensiveTargeting(const std::set<QuadData>::iterator &it,
 	it->reference_integrator.UpdateStates(ref_acc, dt);
 
 	it->reference = this->GetRefRk4(it, dt);
+}
+
+void TeamStrategy::DefensivePotential(const std::set<QuadData>::iterator &it,
+	                               			const double &dt){
+	Eigen::Vector3d pos = it->quad_state.position;
+	Eigen::Vector3d acc = this.field.getAcc(pos,false);
+
+	it->reference_integrator.SetPos(pos);
+	it->reference_integrator.UpdateStates(acc, dt);
+	
+	it->reference = this->GetRefRk4(it,dt);
 }
 
 void TeamStrategy::DefensiveReturn(const std::set<QuadData>::iterator &it,
