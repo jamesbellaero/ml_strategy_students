@@ -24,8 +24,10 @@ TeamStrategy::TeamStrategy(const double max_vel,
 	quadRad = 3;
 	balloonRad = 20;
 	PotentialField field;
-	field.add(new FieldGen("Enemy_Balloon",true,enemy_balloon,balloonStr,balloonRad));
-	field.add(new FieldGen("Team_Balloon",false,team_balloon,balloonStr,balloonRad));
+	FieldGen fg_enemy("Enemy_Balloon",true,enemy_balloon,balloonStr,balloonRad));
+	FieldGen fg_team("Team_Balloon",false,team_balloon,balloonStr,balloonRad));
+	field.add(fg_enemy);
+	field.add(fg_team);
 }
 
 // Methods
@@ -79,7 +81,8 @@ void TeamStrategy::AddQuad(const std::string &quad_name,
 		new_quad.pub_reference = new_quad.nh.advertise<mg_msgs::PVA>(output_topic, 1);
 		quads_.insert(new_quad);
 		n_quads_ = n_quads_ + 1;
-		field.add(new FieldGen(quad_name,true,ref_pos,this->allyStr,this->quadRad));
+		FieldGen fg(quad_name,true,ref_pos,this->allyStr,this->quadRad);
+		field.add(fg);
 	}
 }
 
