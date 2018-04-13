@@ -23,7 +23,7 @@ TeamStrategy::TeamStrategy(const double max_vel,
 	balloonStr = 20;
 	quadRad = 3;
 	balloonRad = 20;
-	PotentialField field();
+	PotentialField field;
 	field.add(new FieldGen("Enemy_Balloon",true,enemy_balloon,balloonStr,balloonRad));
 	field.add(new FieldGen("Team_Balloon",false,team_balloon,balloonStr,balloonRad));
 }
@@ -79,7 +79,7 @@ void TeamStrategy::AddQuad(const std::string &quad_name,
 		new_quad.pub_reference = new_quad.nh.advertise<mg_msgs::PVA>(output_topic, 1);
 		quads_.insert(new_quad);
 		n_quads_ = n_quads_ + 1;
-		field.add(new FieldGen(name,true,ref_pos,this.allyStr,this.quadRad));
+		field.add(new FieldGen(quad_name,true,ref_pos,this->allyStr,this->quadRad));
 	}
 }
 
@@ -122,7 +122,7 @@ void TeamStrategy::UpdateQuadOdom(const std::string &name,
 			this->AddEnemy(name, odom);
 		}
 		if(!field.contains(name)){
-			FieldGen fg(name,false,it2->quad_state.position,this.enemyStr,this.quadRad);
+			FieldGen fg(name,false,it2->quad_state.position,this->enemyStr,this->quadRad);
 			field.add(fg);
 		}
 		else{
@@ -415,7 +415,7 @@ void TeamStrategy::OffensiveBalloon(const std::set<QuadData>::iterator &it,
 void TeamStrategy::OffensivePotential(const std::set<QuadData>::iterator &it,
 	                                  const double &dt) {
 	Eigen::Vector3d pos = it->quad_state.position;
-	Eigen::Vector3d acc = this.field.getAcc(pos,false);
+	Eigen::Vector3d acc = this->field.getAcc(pos,false);
 
 	it->reference_integrator.SetPos(pos);
 	it->reference_integrator.UpdateStates(acc, dt);
@@ -482,7 +482,7 @@ void TeamStrategy::DefensiveTargeting(const std::set<QuadData>::iterator &it,
 void TeamStrategy::DefensivePotential(const std::set<QuadData>::iterator &it,
 	                               			const double &dt){
 	Eigen::Vector3d pos = it->quad_state.position;
-	Eigen::Vector3d acc = this.field.getAcc(pos,false);
+	Eigen::Vector3d acc = this->field.getAcc(pos,false);
 
 	it->reference_integrator.SetPos(pos);
 	it->reference_integrator.UpdateStates(acc, dt);
