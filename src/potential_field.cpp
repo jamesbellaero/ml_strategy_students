@@ -10,6 +10,13 @@ FieldGen::FieldGen(){
   this->radius = 1;
 }
 
+FieldGen::FieldGen(std::string name){
+  this->name = name;
+  this->pos << 0,0,0;
+  this->strength = 0;
+  this->radius = 1;
+}
+
 FieldGen::FieldGen(std::string name, bool attractor, Eigen::Vector3d pos, double strength, double radius){
   this->name = name;
   this->attractor = attractor;
@@ -18,11 +25,11 @@ FieldGen::FieldGen(std::string name, bool attractor, Eigen::Vector3d pos, double
   this->radius = radius;
 }
 
-Eigen::Vector3d FieldGen::getAcc(Eigen::Vector3d refPos, bool invert){
+Eigen::Vector3d FieldGen::getAcc(Eigen::Vector3d refPos, bool invert) const{
   Eigen::Vector3d acc;
   double rho = (pos - refPos).norm(); //Euclidean distance between the two points
-
-  if(invert^it->attractor){// it is an attractor
+  
+  if(invert^this->attractor){// it is an attractor
     if(rho>this->radius)
       acc = -this->strength*(refPos - pos);
     else
@@ -42,23 +49,29 @@ PotentialField::PotentialField(std::set<FieldGen> fieldGens){
   this->fieldGens = fieldGens;
 }
 bool PotentialField::contains(std::string name){
+  FieldGen named(name);
+
   std::set<FieldGen>::iterator it;
-  it = this->fieldGens.find(name);
+  it = this->fieldGens.find(named);
   return it != this->fieldGens.end();
 }
-void PotentialField::add(FieldGen fg){
+void PotentialField::add(FieldGen& fg){
   this->fieldGens.insert(fg);
+  std::cout<<"Added "<<fg.name<<std::endl;
 }
 void PotentialField::updatePos(std::string name, Eigen::Vector3d pos){
-  std::set<FieldGen>::iterator it = this->fieldGens.find(name);
+  FieldGen named(name);
+  std::set<FieldGen>::iterator it = this->fieldGens.find(named);
   it->pos = pos;
 }
 void PotentialField::updateStrength(std::string name, double strength){
-  std::set<FieldGen>::iterator it = this->fieldGens.find(name);
+  FieldGen named(name);
+  std::set<FieldGen>::iterator it = this->fieldGens.find(named);
   it->strength = strength;
 }
 void PotentialField::updateRadius(std::string name, double radius){
-  std::set<FieldGen>::iterator it = this->fieldGens.find(name);
+  FieldGen named(name);
+  std::set<FieldGen>::iterator it = this->fieldGens.find(named);
   it->radius = radius;
 }
 
@@ -67,8 +80,9 @@ Eigen::Vector3d PotentialField::getAcc(Eigen::Vector3d pos, bool invert){
   acc << 0,0,0;
   
   std::set<FieldGen>::iterator it;
-  for(it = this->fieldGens.begin(); it<this->fieldGens.end();it++){
+  for(it = this->fieldGens.begin(); it!=this->fieldGens.end();it++){
     acc += it->getAcc(pos,invert);
+    std::cout<<it->name<<": "<<it->getAcc(pos,invert)<<std::endl;
   }
 }
 

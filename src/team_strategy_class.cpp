@@ -24,13 +24,18 @@ TeamStrategy::TeamStrategy(const double max_vel,
 	quadRad = 3;
 	balloonRad = 20;
 	PotentialField field;
-	FieldGen fg_enemy("Enemy_Balloon",true,enemy_balloon,balloonStr,balloonRad);
-	FieldGen fg_team("Team_Balloon",false,team_balloon,balloonStr,balloonRad);
-	field.add(fg_enemy);
-	field.add(fg_team);
 }
 
 // Methods
+
+void TeamStrategy::AddBalloonsToField(const Eigen::Vector3d team_balloon, 
+					const Eigen::Vector3d enemy_balloon){
+	FieldGen fg_enemy("Enemy_Balloon",true,enemy_balloon,balloonStr,balloonRad);
+	FieldGen fg_team("Team_Balloon",false,team_balloon,balloonStr,balloonRad);
+	this->field.add(fg_enemy);
+	this->field.add(fg_team);
+
+}
 void TeamStrategy::PrintQuadNames() {
 	std::set<QuadData>::iterator it1;
 	std::cout << "Team quads:" << std::endl;

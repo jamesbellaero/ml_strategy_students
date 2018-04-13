@@ -120,6 +120,7 @@ class TeamStrategy {
  		         const Eigen::Vector3d enemy_balloon);
 
  	// Methods
+    void AddBalloonsToField(const Eigen::Vector3d team_balloon, const Eigen::Vector3d enemy_balloon);
     void PrintQuadNames();
     void PrintQuadReferences(const std::string &name);
     void AddQuad(const std::string &quad_name,

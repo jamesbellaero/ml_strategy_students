@@ -45,7 +45,8 @@ int main(int argc, char** argv){
 	// Initialize strategy class --------------------------------
 	globals_.obj_team_strategy =
 		TeamStrategy(max_vel, max_acc, team_balloon_pos, enemy_balloon_pos);
-
+	
+	globals_.obj_team_strategy.AddBalloonsToField(team_balloon_pos,enemy_balloon_pos);
 	// Set quad roles based on the number of quads --------------
 	std::vector<uint> roles;
 	QuadRole role_struct;
