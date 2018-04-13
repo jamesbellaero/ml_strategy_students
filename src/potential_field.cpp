@@ -1,7 +1,7 @@
 //potential_field.cpp
 // References: Spong, "Robotic Dynamics and Control, Second Edition", pg 159-160
 
-#include "potential_field.h"
+#include "ml_strategy/potential_field.h"
 
 FieldGen::FieldGen(){
   this.name = "";

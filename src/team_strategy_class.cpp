@@ -24,8 +24,8 @@ TeamStrategy::TeamStrategy(const double max_vel,
 	quadRad = 3;
 	balloonRad = 20;
 	PotentialField field;
-	FieldGen fg_enemy("Enemy_Balloon",true,enemy_balloon,balloonStr,balloonRad));
-	FieldGen fg_team("Team_Balloon",false,team_balloon,balloonStr,balloonRad));
+	FieldGen fg_enemy("Enemy_Balloon",true,enemy_balloon,balloonStr,balloonRad);
+	FieldGen fg_team("Team_Balloon",false,team_balloon,balloonStr,balloonRad);
 	field.add(fg_enemy);
 	field.add(fg_team);
 }

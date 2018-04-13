@@ -2,7 +2,7 @@
 #ifndef POTENTIAL_FIELD_H
 #define POTENTIAL_FIELD_H
 
-#include <string.h>
+#include <string>
 #include <Eigen/Dense>
 
 class FieldGen{

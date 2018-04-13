@@ -37,7 +37,8 @@ add_executable(ml_strategy_students
                src/ml_strategy.cpp
                src/linear_algebra.cpp
                src/team_strategy_class.cpp
-               src/helper.cpp
+               src/potential_field.cpp
+	       src/helper.cpp
                src/threads.cpp
                src/rk4.cpp)
 target_link_libraries(ml_strategy_students ${catkin_LIBRARIES})
