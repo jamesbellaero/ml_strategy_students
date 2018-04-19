@@ -18,10 +18,10 @@ TeamStrategy::TeamStrategy(const double max_vel,
 	enemy_balloon_plane_ = Plane3d(enemy_balloon_, defensive_direction_);
 	n_quads_ = 0;
 	n_enemies_ = 0;
-	enemyStr = 5;
+	enemyStr = 15;
 	allyStr = 5;
 	balloonStr = 20;
-	quadRad = 3;
+	quadRad = 6;
 	balloonRad = 20;
 	PotentialField field;
 }
