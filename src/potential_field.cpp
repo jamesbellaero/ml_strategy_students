@@ -48,6 +48,29 @@ Eigen::Vector3d FieldGen::getAcc(const Eigen::Vector3d& refPos, const bool& inve
   return acc;
 }
 
+Eigen::Vector3d FieldGen::getAcc(const Eigen::Vector3d& refPos, const bool& invert) const{
+  Eigen::Vector3d vel;
+  double rho = (pos - refPos).norm(); //Euclidean distance between the two points
+  Eigen::Vector3d rhoHat = (pos - refPos).normalized();
+  if(invert^this->attractor){// it is an attractor
+    if(rho>this->radius)
+      vel << 0,0,0;
+    else
+      vel = -(this->radius*this->strength*(pos-refPos)/rho/rho);
+      //std::cout<<this->name<<" Attractor vel: "<<vel<<std::endl;
+  }
+  else{// Repulsor
+    if(rho>this->radius)
+      vel << 0,0,0;
+    else
+      vel = (this->radius*this->strength*(pos-refPos)/rho/rho);
+      //std::cout<<this->name<<" Repulsor vel: "<<vel<<std::endl;
+  }
+  //std::cout<<"\n\n"<<"Difference of "<<rho<<" for attractor="<<attractor<<"yields vel of "<<vel<<std::endl;
+  //std::cout<<"\n\n"<<this->name<<": "<<pos<<"\n"<<"Strength: "<<strength<<"\tRadius: "<<radius<<"\t Attractor: "<<attractor<<"\t Rho"<<rho<<"\nRefPos: "<<refPos<<std::endl;
+  return vel;
+}
+
 PotentialField::PotentialField(){
 }
 PotentialField::PotentialField(const std::set<FieldGen>& fieldGens){
@@ -89,10 +112,23 @@ Eigen::Vector3d PotentialField::getAcc(const Eigen::Vector3d& pos, const std::st
   for(it = this->fieldGens.begin(); it!=this->fieldGens.end();it++){
     if(name.compare(it->name)!=0){
       acc += it->getAcc(pos,invert);
-      std::cout<<name<<" and "<<it->name<<": "<<it->getAcc(pos,invert)<<std::endl;
+      //std::cout<<name<<" and "<<it->name<<": "<<it->getAcc(pos,invert)<<std::endl;
     }
   }
   return acc;
+}
+Eigen::Vector3d PotentialField::getVel(const Eigen::Vector3d& pos, const std::string& name, const bool& invert){
+  Eigen::Vector3d vel;
+  acc << 0,0,0;
+  
+  std::set<FieldGen>::iterator it;
+  for(it = this->fieldGens.begin(); it!=this->fieldGens.end();it++){
+    if(name.compare(it->name)!=0){
+      vel += it->getVel(pos,invert);
+      //std::cout<<name<<" and "<<it->name<<": "<<it->getAcc(pos,invert)<<std::endl;
+    }
+  }
+  return vel;
 }
 
 

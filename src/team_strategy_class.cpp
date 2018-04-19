@@ -423,10 +423,15 @@ void TeamStrategy::OffensiveBalloon(const std::set<QuadData>::iterator &it,
 void TeamStrategy::OffensivePotential(const std::set<QuadData>::iterator &it,
 	                                  const double &dt) {
 	Eigen::Vector3d pos = it->quad_state.position;
-	Eigen::Vector3d acc = this->field.getAcc(pos,it->name,false);
+	Eigen::Vector3d vel = it->quad_state.velocity;
+	//Eigen::Vector3d acc = this->field.getAcc(pos,it->name,false);
+
+	double kd = 2.5;
+	Eigen::Vector3d ref_vel = max_vel_*field.getVel().normalized();
+	Eigen::Vector3d ref_acc = kd*(ref_vel - vel);
 
 	it->reference_integrator.SetPos(pos);
-	it->reference_integrator.UpdateStates(acc, dt);
+	it->reference_integrator.UpdateStates(ref_acc, dt);
 
 	it->reference = this->GetRefRk4(it,dt);
 
