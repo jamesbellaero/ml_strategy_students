@@ -20,8 +20,8 @@ TeamStrategy::TeamStrategy(const double max_vel,
 	n_enemies_ = 0;
 	enemyStr = 15;
 	allyStr = 5;
-	balloonStr = 20;
-	quadRad = 6;
+	balloonStr = 40;
+	quadRad = 3;
 	balloonRad = 20;
 	PotentialField field;
 }
@@ -130,7 +130,7 @@ void TeamStrategy::UpdateQuadOdom(const std::string &name,
 			this->AddEnemy(name, odom);
 		}
 		if(!field.contains(name)){
-			FieldGen fg(name,false,it2->quad_state.position,this->enemyStr,this->quadRad);
+			FieldGen fg(name,false,it2->quad_state.position,this->enemyStr,this->quadRad*2);
 			field.add(fg);
 		}
 		else{
@@ -426,8 +426,8 @@ void TeamStrategy::OffensivePotential(const std::set<QuadData>::iterator &it,
 	Eigen::Vector3d vel = it->quad_state.velocity;
 	//Eigen::Vector3d acc = this->field.getAcc(pos,it->name,false);
 
-	double kd = 2.5;
-	Eigen::Vector3d ref_vel = max_vel_*field.getVel().normalized();
+	double kd = 4;
+	Eigen::Vector3d ref_vel = max_vel_*field.getVel(pos,it->name,false).normalized();
 	Eigen::Vector3d ref_acc = kd*(ref_vel - vel);
 
 	it->reference_integrator.SetPos(pos);

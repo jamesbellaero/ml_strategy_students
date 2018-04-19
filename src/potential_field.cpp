@@ -48,7 +48,7 @@ Eigen::Vector3d FieldGen::getAcc(const Eigen::Vector3d& refPos, const bool& inve
   return acc;
 }
 
-Eigen::Vector3d FieldGen::getAcc(const Eigen::Vector3d& refPos, const bool& invert) const{
+Eigen::Vector3d FieldGen::getVel(const Eigen::Vector3d& refPos, const bool& invert) const{
   Eigen::Vector3d vel;
   double rho = (pos - refPos).norm(); //Euclidean distance between the two points
   Eigen::Vector3d rhoHat = (pos - refPos).normalized();
@@ -56,14 +56,14 @@ Eigen::Vector3d FieldGen::getAcc(const Eigen::Vector3d& refPos, const bool& inve
     if(rho>this->radius)
       vel << 0,0,0;
     else
-      vel = -(this->radius*this->strength*(pos-refPos)/rho/rho);
+      vel = (this->radius*this->strength*(pos-refPos)/rho/rho);
       //std::cout<<this->name<<" Attractor vel: "<<vel<<std::endl;
   }
   else{// Repulsor
     if(rho>this->radius)
       vel << 0,0,0;
     else
-      vel = (this->radius*this->strength*(pos-refPos)/rho/rho);
+      vel = -(this->radius*this->strength*(pos-refPos)/rho/rho);
       //std::cout<<this->name<<" Repulsor vel: "<<vel<<std::endl;
   }
   //std::cout<<"\n\n"<<"Difference of "<<rho<<" for attractor="<<attractor<<"yields vel of "<<vel<<std::endl;
@@ -119,7 +119,7 @@ Eigen::Vector3d PotentialField::getAcc(const Eigen::Vector3d& pos, const std::st
 }
 Eigen::Vector3d PotentialField::getVel(const Eigen::Vector3d& pos, const std::string& name, const bool& invert){
   Eigen::Vector3d vel;
-  acc << 0,0,0;
+  vel << 0,0,0;
   
   std::set<FieldGen>::iterator it;
   for(it = this->fieldGens.begin(); it!=this->fieldGens.end();it++){
