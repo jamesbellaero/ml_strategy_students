@@ -34,12 +34,14 @@ Eigen::Vector3d FieldGen::getAcc(const Eigen::Vector3d& refPos, const bool& inve
       acc = -this->strength*(refPos - pos);
     else
       acc = -this->radius*this->strength*(refPos - pos)/rho;
+      //std::cout<<this->name<<" Attractor Accel: "<<acc<<std::endl;
   }
   else{// Repulsor
     if(rho>this->radius)
       acc << 0,0,0;
     else
-      acc =  this->strength*(1/rho - 1/this->radius)*1/rho/rho*(refPos-pos)/((refPos-pos).norm());
+      acc =  this->strength*this->strength*(1/rho - 1/this->radius)*1/rho/rho*(refPos-pos)/((refPos-pos).norm());
+      //std::cout<<this->name<<" Repulsor Accel: "<<acc<<std::endl;
   }
   //std::cout<<"\n\n"<<"Difference of "<<rho<<" for attractor="<<attractor<<"yields accel of "<<acc<<std::endl;
   //std::cout<<"\n\n"<<this->name<<": "<<pos<<"\n"<<"Strength: "<<strength<<"\tRadius: "<<radius<<"\t Attractor: "<<attractor<<"\t Rho"<<rho<<"\nRefPos: "<<refPos<<std::endl;
@@ -87,7 +89,7 @@ Eigen::Vector3d PotentialField::getAcc(const Eigen::Vector3d& pos, const std::st
   for(it = this->fieldGens.begin(); it!=this->fieldGens.end();it++){
     if(name.compare(it->name)!=0){
       acc += it->getAcc(pos,invert);
-      //std::cout<<it->name<<" and "<<name<<": "<<it->getAcc(pos,invert)<<std::endl;
+      std::cout<<name<<" and "<<it->name<<": "<<it->getAcc(pos,invert)<<std::endl;
     }
   }
   return acc;
