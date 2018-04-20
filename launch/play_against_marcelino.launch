@@ -1,7 +1,7 @@
 <launch>
 
-  <node pkg="ml_strategy_students"
-    type="ml_strategy_students"
+  <node pkg="ml_strategy_bloon_masters"
+    type="ml_strategy_bloons_masters"
     name="wizard_strategy"
     output="screen">
 

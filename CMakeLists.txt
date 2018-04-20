@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(ml_strategy_students)
+project(ml_strategy_bloons_masters)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++11)
@@ -33,7 +33,7 @@ include_directories(
   ${Eigen_INCLUDE_DIRS}
 )
 
-add_executable(ml_strategy_students 
+add_executable(ml_strategy_bloons_masters
                src/ml_strategy.cpp
                src/linear_algebra.cpp
                src/team_strategy_class.cpp
@@ -41,6 +41,8 @@ add_executable(ml_strategy_students
 	       src/helper.cpp
                src/threads.cpp
                src/rk4.cpp)
-target_link_libraries(ml_strategy_students ${catkin_LIBRARIES})
-add_dependencies(ml_strategy_students ${catkin_EXPORTED_TARGETS})
-add_dependencies(ml_strategy_students mg_msgs_generate_messages_cpp)
+target_link_libraries(ml_strategy_bloons_masters ${catkin_LIBRARIES})
+add_dependencies(ml_strategy_bloons_masters ${catkin_EXPORTED_TARGETS})
+add_dependencies(ml_strategy_bloons_masters mg_msgs_generate_messages_cpp)
+install(TARGETS ml_strategy_bloons_masters RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
